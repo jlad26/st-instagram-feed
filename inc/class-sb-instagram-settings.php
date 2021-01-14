@@ -108,7 +108,7 @@ class SB_Instagram_Settings {
 				'resizeprocess'    => isset( $db['sb_instagram_resizeprocess'] ) ? $db['sb_instagram_resizeprocess'] : 'background',
 				'customtemplates'    => isset( $db['custom_template'] ) ? $db['custom_template'] : '',
 				'gdpr'    => isset( $db['gdpr'] ) ? $db['gdpr'] : 'auto',
-			), $atts );
+			), $atts, 'sbi' );
 
 		$this->settings['customtemplates'] = $this->settings['customtemplates'] === 'true' || $this->settings['customtemplates'] === 'on';
 		if ( isset( $_GET['sbi_debug'] ) ) {
