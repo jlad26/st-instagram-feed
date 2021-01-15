@@ -1426,3 +1426,82 @@ function sbi_get_option( $option_name, $default ) {
 function sbi_is_pro_version() {
 	return defined( 'SBI_STORE_URL' );
 }
+
+/**
+ * Renders html for video
+ */
+function st_sbi_render_video_html( $item, $display = true ) {
+	if ( ! $display ) {
+		return false;
+	}
+	?>
+    <div class="stif-video">
+        <video controls style="width: 100%">
+            <source src="<?php echo $item->media_url; ?>" type="video/mp4">
+        </video>
+    </div>
+    <?php
+}
+
+/**
+ * Renders html for image
+ */
+function st_sbi_render_image_html( $item, $display = true, $icon_html = '' ) {
+	if ( $display ) : ?>	
+		<a class="sbi_photo" href="<?php echo esc_url( $item->media_full_res ); ?>" target="_blank" rel="noopener nofollow" data-full-res="<?php echo esc_url( $item->media_full_res ); ?>" data-img-src-set="<?php echo esc_attr( sbi_json_encode( $item->media_all_sizes_json ) ); ?>"<?php echo $item->sbi_photo_style_element; ?>>
+			<span class="sbi-screenreader"><?php echo esc_html( $item->img_screenreader ); ?></span>
+			<?php echo $icon_html; ?>
+			<img src="<?php echo esc_url( $item->media_url ); ?>" alt="<?php echo esc_attr( $item->img_alt ); ?>">
+		</a>
+	<?php else : ?>
+		<a href="<?php echo esc_url( $item->media_full_res ); ?>"></a>
+	<?php endif;
+}
+
+/**
+ * Passes data from post to data format for display.
+ */
+function st_sbi_parse_item( $post, $settings, $offset, $icon_type, $resized_images ) {
+
+	$item = new stdClass();
+	$item->classes = SB_Instagram_Display_Elements::get_item_classes( $settings, $offset );
+	$item->post_id = SB_Instagram_Parse::get_post_id( $post );
+	$item->timestamp = SB_Instagram_Parse::get_timestamp( $post );
+	$item->media_type = SB_Instagram_Parse::get_media_type( $post );
+	$item->permalink = SB_Instagram_Parse::get_permalink( $post );
+	$item->media_url = 'VIDEO' == $post['media_type'] ? $post['media_url'] : SB_Instagram_Display_Elements::get_optimum_media_url( $post, $settings, $resized_images );
+	$item->media_full_res = SB_Instagram_Parse::get_media_url( $post );
+	$item->sbi_photo_style_element = SB_Instagram_Display_Elements::get_sbi_photo_style_element( $post, $settings ); // has already been escaped
+	$item->media_all_sizes_json = SB_Instagram_Parse::get_media_src_set( $post, $resized_images );
+	$item->caption = SB_Instagram_Parse::get_caption( $post );
+	$item->icon_type = $icon_type;
+
+	// Make sure caption has height even if empty to create spacing between items.
+	if ( ! $item->caption ) {
+		$item->caption = '&nbsp;';
+	}
+
+	/**
+	 * Text that appears in the "alt" attribute for this image
+	 *
+	 * @param string $item->img_alt full caption for post
+	 * @param array $post api data for the post
+	 *
+	 * @since 2.1.5
+	 */
+	$item->img_alt = SB_Instagram_Parse::get_caption( $post, sprintf( __( 'Instagram post %s', 'instagram-feed' ), $item->post_id ) );
+	$item->img_alt = apply_filters( 'sbi_img_alt', $item->img_alt, $post );
+
+	/**
+	 * Text that appears in the visually hidden screen reader element
+	 *
+	 * @param string $item->img_screenreader first 50 characters for post
+	 * @param array $post api data for the post
+	 *
+	 * @since 2.1.5
+	 */
+	$item->img_screenreader = substr( SB_Instagram_Parse::get_caption( $post, sprintf( __( 'Instagram post %s', 'instagram-feed' ), $item->post_id ) ), 0, 50 );
+	$item->img_screenreader = apply_filters( 'sbi_img_screenreader', $item->img_screenreader, $post );
+
+	return $item;
+}
