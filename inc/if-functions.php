@@ -1024,10 +1024,14 @@ function sb_instagram_scripts_enqueue() {
 	//Options to pass to JS file
 	$sb_instagram_settings = get_option( 'sb_instagram_settings' );
 
-	$js_file = 'js/sbi-scripts.min.js';
-	if ( isset( $_GET['sbi_debug'] ) ) {
-		$js_file = 'js/sbi-scripts.js';
-	}
+	/**
+	 * Set the JS file to unminified as we have modified that version.
+	 */
+	// $js_file = 'js/sbi-scripts.min.js';
+	// if ( isset( $_GET['sbi_debug'] ) ) {
+	// 	$js_file = 'js/sbi-scripts.js';
+	// }
+	$js_file = 'js/sbi-scripts.js';
 
 	if ( isset( $sb_instagram_settings['enqueue_js_in_head'] ) && $sb_instagram_settings['enqueue_js_in_head'] ) {
 		wp_enqueue_script( 'sb_instagram_scripts', trailingslashit( SBI_PLUGIN_URL ) . $js_file, array('jquery'), SBIVER, false );

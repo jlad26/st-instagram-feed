@@ -495,6 +495,53 @@ if(!sbi_js_exists) {
                             feed.afterNewImagesLoaded();
                         }
 
+                        // Load more on scrolldown
+                        var decodedAtts = JSON.parse( feed.settings.shortCodeAtts );
+                        if ( 'undefined' !== typeof( decodedAtts.scroll_loadmore ) ) {
+                            if ( 'true' == decodedAtts.scroll_loadmore ) {
+                                
+                                // If the response is empty we have no more to load.
+                                if ( 'IntersectionObserver' in window && '' !== response.html ) {
+
+                                    var feedItems = feed.el.querySelector( '#sbi_images' );
+                                    if ( 'undefined' !== typeof( feedItems ) ) {
+                                        var lastItem = feedItems.lastElementChild;
+                                        if ( 'undefined' !== typeof( lastItem ) ) {
+                                            
+                                            // First check if part of last item is already in viewport.
+                                            var distance = lastItem.getBoundingClientRect();
+                                            if ( distance.top <= 1.5 * ( window.innerHeight || document.documentElement.clientHeight ) ) {
+                                                feed.getNewPostSet();
+                                            } else { //...otherwise put listener for when last item arrives in viewport
+
+                                                let options = {
+                                                    root: null,
+                                                    rootMargin: '50%',
+                                                    threshold: 0
+                                                }
+                        
+                                                let scrollLoadMore = ( entries, observer ) => {
+                                                    entries.forEach( entry => {
+                                                        if ( entry.isIntersecting ) {
+                                                            observer.disconnect();
+                                                            feed.getNewPostSet();
+                                                        }
+                                                    } );
+                                                };
+                                                
+                                                let observer = new IntersectionObserver( scrollLoadMore, options );
+                                                observer.observe( lastItem );
+
+                                            }
+
+                                        }
+
+                                    }
+            
+                                }
+                            }
+                        }
+
                         if (!response.feedStatus.shouldPaginate) {
                             feed.outOfPages = true;
                             $self.find('.sbi_load_btn').hide();

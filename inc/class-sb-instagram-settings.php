@@ -108,6 +108,7 @@ class SB_Instagram_Settings {
 				'resizeprocess'    => isset( $db['sb_instagram_resizeprocess'] ) ? $db['sb_instagram_resizeprocess'] : 'background',
 				'customtemplates'    => isset( $db['custom_template'] ) ? $db['custom_template'] : '',
 				'gdpr'    => isset( $db['gdpr'] ) ? $db['gdpr'] : 'auto',
+				'scroll_loadmore'	=> isset( $db['st_sb_instagram_scroll_loadmore'] ) ? $db['st_sb_instagram_scroll_loadmore'] : 'false',
 			), $atts, 'sbi' );
 
 		$this->settings['customtemplates'] = $this->settings['customtemplates'] === 'true' || $this->settings['customtemplates'] === 'on';
@@ -819,6 +820,9 @@ class SB_Instagram_Settings {
 			//Autoscroll
 			'sb_instagram_autoscroll' => false,
 			'sb_instagram_autoscrolldistance' => 200,
+
+			// Sneezing Trees autoscroll addition
+			'st_sb_instagram_scroll_loadmore'	=> 'false',
 
 			//Misc
 			'sb_instagram_custom_css'           => '',
