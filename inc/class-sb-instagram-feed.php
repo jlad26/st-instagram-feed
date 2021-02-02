@@ -270,6 +270,12 @@ class SB_Instagram_Feed
 	 * @since 2.0/5.0
 	 */
 	public function set_post_data_from_cache( $atts = array() ) {
+		
+		// Give option to prevent cache use.
+		if ( apply_filters( 'st_sbi_prevent_cache_use', false ) ) {
+			return false;
+		}
+		
 		$transient_data = get_transient( $this->regular_feed_transient_name );
 
 		$transient_data = json_decode( $transient_data, true );
@@ -869,6 +875,12 @@ class SB_Instagram_Feed
 	 * @since 2.0/5.1 duplicate posts removed
 	 */
 	public function cache_feed_data( $cache_time, $save_backup = true ) {
+		
+		// Give option to prevent cache use.
+		if ( apply_filters( 'st_sbi_prevent_cache_use', false ) ) {
+			return false;
+		}
+		
 		if ( ! empty( $this->post_data ) || ! empty( $this->next_pages ) ) {
 			$this->remove_duplicate_posts();
 			$this->trim_posts_to_max();
