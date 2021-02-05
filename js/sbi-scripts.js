@@ -481,6 +481,13 @@ if(!sbi_js_exists) {
                         current_resolution: feed.imageResolution
                     };
                 var onSuccess = function (data) {
+                    
+                    // Remove loading indicator.
+                    var loadingIndicator = document.querySelector( '#sb_instagram .st-sbi-loading' );
+                    if ( loadingIndicator ){
+                        loadingIndicator.remove();
+                    }
+                    
                     if (data.trim().indexOf('{') === 0) {
                         var response = JSON.parse(data);
                         if (feed.settings.debugEnabled) {
@@ -552,6 +559,9 @@ if(!sbi_js_exists) {
                     }
 
                 };
+
+                // Show loading indicator
+                document.querySelector( '#sb_instagram' ).insertAdjacentHTML( 'beforeend', '<div class="st-sbi-loading"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>' );
                 sbiAjax(submitData, onSuccess);
             },
             appendNewPosts: function (newPostsHtml) {
