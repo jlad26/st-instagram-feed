@@ -299,6 +299,10 @@ class SB_Instagram_Settings {
 				}
 			}
 
+			if ( isset( $this->settings['cwine_id'] ) && $this->settings['cwine_id'] ) {
+				$sbi_transient_name .= '_' . $this->settings['cwine_id'];
+			}
+
 			$num = $this->settings['num'];
 
 			$num_length = strlen( $num ) + 1;
