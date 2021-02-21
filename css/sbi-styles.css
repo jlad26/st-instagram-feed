@@ -226,9 +226,6 @@
     -webkit-animation: sbi-sk-scaleout 1.0s infinite ease-in-out;
     animation: sbi-sk-scaleout 1.0s infinite ease-in-out;
 }
-#sb_instagram br {
-    display: none;
-}
 #sbi_load p {
     display: inline;
     padding: 0;
